@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f4f4f5;
+  --foreground: #18181b;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.ProseMirror {
+  outline: none;
+}
+
+.ProseMirror p {
+  margin: 0 0 1rem;
+}
+
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3 {
+  margin: 1.4rem 0 0.7rem;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.ProseMirror h1 {
+  font-size: 1.8rem;
+}
+
+.ProseMirror h2 {
+  font-size: 1.45rem;
+}
+
+.ProseMirror blockquote {
+  border-left: 3px solid #10b981;
+  color: #52525b;
+  margin: 1rem 0;
+  padding-left: 1rem;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.ProseMirror .is-empty::before {
+  color: #a1a1aa;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.collaboration-cursor__caret {
+  border-left: 2px solid;
+  border-right: 2px solid;
+  margin-left: -1px;
+  margin-right: -1px;
+  pointer-events: none;
+  position: relative;
+  word-break: normal;
+}
+
+.collaboration-cursor__label {
+  border-radius: 4px;
+  color: white;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  left: -1px;
+  line-height: 1;
+  padding: 0.25rem 0.35rem;
+  position: absolute;
+  top: -1.5rem;
+  user-select: none;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .ProseMirror {
+    min-height: 420px;
+    padding: 1rem;
+  }
+}

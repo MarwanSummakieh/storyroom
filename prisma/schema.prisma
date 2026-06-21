@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum StoryBibleKind {
+  CHARACTER
+  PLACE
+  LORE
+  CANON
+}
+
+enum SceneStatus {
+  DRAFT
+  REVISING
+  REVIEW
+  LOCKED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  color     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages ChatMessage[]
+}
+
+model Novel {
+  id          String   @id @default(cuid())
+  title       String
+  logline     String
+  genre       String
+  roomId      String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  chapters       Chapter[]
+  scenes         Scene[]
+  storyBible     StoryBibleEntry[]
+  chatMessages   ChatMessage[]
+  documentStates DocumentSnapshot[]
+}
+
+model Chapter {
+  id        String   @id @default(cuid())
+  novelId   String
+  title     String
+  position  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  novel  Novel   @relation(fields: [novelId], references: [id], onDelete: Cascade)
+  scenes Scene[]
+
+  @@index([novelId, position])
+}
+
+model Scene {
+  id        String      @id @default(cuid())
+  novelId   String
+  chapterId String
+  title     String
+  summary   String
+  status    SceneStatus @default(DRAFT)
+  position  Int
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  novel             Novel              @relation(fields: [novelId], references: [id], onDelete: Cascade)
+  chapter           Chapter            @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chatMessages      ChatMessage[]
+  documentSnapshots DocumentSnapshot[]
+
+  @@index([novelId, chapterId, position])
+}
+
+model StoryBibleEntry {
+  id        String         @id @default(cuid())
+  novelId   String
+  kind      StoryBibleKind
+  title     String
+  body      String
+  tags      String[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  novel Novel @relation(fields: [novelId], references: [id], onDelete: Cascade)
+
+  @@index([novelId, kind])
+}
+
+model ChatMessage {
+  id          String   @id @default(cuid())
+  novelId     String
+  sceneId     String
+  userId      String?
+  authorName  String
+  authorColor String
+  body        String
+  createdAt   DateTime @default(now())
+
+  novel Novel @relation(fields: [novelId], references: [id], onDelete: Cascade)
+  scene Scene @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+  user  User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([sceneId, createdAt])
+}
+
+model DocumentSnapshot {
+  id        String   @id @default(cuid())
+  novelId   String
+  sceneId   String
+  update    Bytes
+  version   Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  novel Novel @relation(fields: [novelId], references: [id], onDelete: Cascade)
+  scene Scene @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+
+  @@unique([sceneId])
+}
