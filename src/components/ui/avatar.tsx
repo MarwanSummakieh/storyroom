@@ -11,7 +11,7 @@ export function Avatar({ name, color, size = "md" }: AvatarProps) {
 
   return (
     <span
-      className={`${dimension} inline-flex shrink-0 items-center justify-center rounded-full font-semibold text-white shadow-sm ring-2 ring-white`}
+      className={`${dimension} inline-flex shrink-0 items-center justify-center rounded-full font-semibold text-white shadow-sm ring-2 ring-surface`}
       style={{ backgroundColor: color }}
       title={name}
       aria-label={name}

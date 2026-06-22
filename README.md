@@ -44,15 +44,31 @@ This project demonstrates realtime state synchronization, editor architecture, W
 
 ## Quick Start
 
+### Run with Docker (recommended)
+
+Runs the whole app — web, realtime server, and Postgres — in containers:
+
+```bash
+docker compose up --build
+```
+
+Open [http://localhost:3000](http://localhost:3000) (the web container's published
+port), then open the same URL in a second browser tab. Type in one tab and watch
+the second tab update instantly. The realtime service is published on
+`ws://localhost:1234`.
+
+To stop: `docker compose down` (add `-v` to also wipe the database volume).
+
+### Run on the host (for development)
+
 ```bash
 corepack pnpm install
-corepack pnpm prisma:generate
+docker compose up -d postgres   # or omit to use the zero-setup JSON store
 corepack pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000), then open the same URL in a second browser tab. Type in one tab and watch the second tab update instantly.
-
-The realtime service runs on `ws://localhost:1234`.
+`pnpm dev` runs Next.js + the realtime server together. With `DATABASE_URL` set
+(see `.env.example`) it uses Postgres; without it, a local JSON file store.
 
 ## Demo Script For Recruiters
 

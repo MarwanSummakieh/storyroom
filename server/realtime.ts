@@ -6,7 +6,8 @@ import * as Y from "yjs";
 import { addChatMessage, loadDocumentState, saveDocumentState } from "../src/lib/store";
 import { statelessMessageSchema } from "../src/lib/validation";
 
-const port = Number(process.env.COLLAB_PORT ?? 1234);
+// Hosts like Render/Railway/Fly inject PORT; fall back to COLLAB_PORT locally.
+const port = Number(process.env.COLLAB_PORT ?? process.env.PORT ?? 1234);
 
 const server = new Server({
   name: "storyroom-realtime",

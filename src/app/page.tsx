@@ -1,5 +1,5 @@
-import { StoryroomApp } from "@/components/storyroom/storyroom-app";
+import { Dashboard } from "@/components/storyroom/dashboard";
 
 export default function Home() {
-  return <StoryroomApp />;
+  return <Dashboard />;
 }

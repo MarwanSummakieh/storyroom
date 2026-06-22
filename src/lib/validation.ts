@@ -6,8 +6,25 @@ export const createNovelSchema = z.object({
   genre: z.string().trim().min(2).max(40).default("Speculative fiction"),
 });
 
+export const updateNovelSchema = z.object({
+  title: z.string().trim().min(2).max(80).optional(),
+  logline: z.string().trim().min(4).max(180).optional(),
+  genre: z.string().trim().min(2).max(40).optional(),
+});
+
 export const createChapterSchema = z.object({
   title: z.string().trim().min(2).max(80),
+});
+
+export const updateChapterSchema = z.object({
+  title: z.string().trim().min(2).max(80).optional(),
+});
+
+export const updateStoryBibleEntrySchema = z.object({
+  kind: z.enum(["character", "place", "lore", "canon"]).optional(),
+  title: z.string().trim().min(2).max(80).optional(),
+  body: z.string().trim().min(3).max(800).optional(),
+  tags: z.array(z.string().trim().min(1).max(24)).max(8).optional(),
 });
 
 export const createSceneSchema = z.object({
@@ -58,7 +75,12 @@ export const statelessMessageSchema = z.discriminatedUnion("type", [
 ]);
 
 export type CreateNovelInput = z.infer<typeof createNovelSchema>;
+export type UpdateNovelInput = z.infer<typeof updateNovelSchema>;
 export type CreateChapterInput = z.infer<typeof createChapterSchema>;
+export type UpdateChapterInput = z.infer<typeof updateChapterSchema>;
+export type UpdateStoryBibleEntryInput = z.infer<
+  typeof updateStoryBibleEntrySchema
+>;
 export type CreateSceneInput = z.infer<typeof createSceneSchema>;
 export type UpdateSceneInput = z.infer<typeof updateSceneSchema>;
 export type CreateStoryBibleEntryInput = z.infer<typeof createStoryBibleEntrySchema>;

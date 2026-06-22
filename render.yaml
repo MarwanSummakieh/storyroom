@@ -1,0 +1,29 @@
+# Render Blueprint — provisions the realtime WebSocket service + a Postgres DB.
+#
+# The Next.js web app deploys SEPARATELY on Vercel and connects to:
+#   - this realtime service over wss://
+#   - the same Postgres database below (use its EXTERNAL connection string)
+#
+# Deploy: push this repo to GitHub, then in Render: New > Blueprint > pick repo.
+databases:
+  - name: storyroom-db
+    databaseName: storyroom
+    user: storyroom
+    plan: free
+
+services:
+  - type: web
+    name: storyroom-realtime
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: / # Hocuspocus answers GET / with 200 "Welcome to Hocuspocus!"
+    # Apply the Prisma schema to the database before the service starts.
+    preDeployCommand: pnpm db:push
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: storyroom-db
+          property: connectionString
+      - key: NODE_ENV
+        value: production

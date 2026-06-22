@@ -9,11 +9,15 @@
     "dev:realtime": "tsx watch server/realtime.ts",
     "build": "next build",
     "start": "next start",
+    "start:realtime": "tsx server/realtime.ts",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:test": "tsx scripts/db-smoke-test.ts",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@hocuspocus/provider": "^4.3.0",
