@@ -42,24 +42,68 @@ This project demonstrates realtime state synchronization, editor architecture, W
 | Persistence | JSON dev store, Prisma/Postgres schema |
 | Testing | Vitest, Playwright |
 
-## Quick Start
+## Deploy in one command
 
-### Run with Docker (recommended)
-
-Runs the whole app — web, realtime server, and Postgres — in containers:
+The only prerequisite is **[Docker](https://docs.docker.com/get-docker/)** (Docker
+Desktop on macOS/Windows, or Docker Engine on Linux). After cloning the repo:
 
 ```bash
-docker compose up --build
+bash deploy.sh
 ```
 
-Open [http://localhost:3000](http://localhost:3000) (the web container's published
-port), then open the same URL in a second browser tab. Type in one tab and watch
-the second tab update instantly. The realtime service is published on
-`ws://localhost:1234`.
+That's it. The script builds and starts the entire app in containers — the
+Next.js web app, the Hocuspocus realtime server, and Postgres — applies the
+database schema, waits until the app is answering, and prints the URLs:
 
-To stop: `docker compose down` (add `-v` to also wipe the database volume).
+```
+✔ Storyroom is live
+    App:      http://localhost:3000
+    Realtime: ws://localhost:1234
+```
 
-### Run on the host (for development)
+Open [http://localhost:3000](http://localhost:3000), then open the same URL in a
+second tab — type in one and watch the other sync live.
+
+> **Windows:** run `bash deploy.sh` from Git Bash or WSL. From PowerShell or any
+> shell, the equivalent is `docker compose up --build` (see below).
+
+### What the command does
+
+`deploy.sh` is a thin wrapper around Docker Compose. It:
+
+1. checks that Docker is installed and running,
+2. runs `docker compose up --build -d`, which starts the services in order:
+   `postgres` → `migrate` (applies the Prisma schema) → `web` + `realtime`,
+3. polls `http://localhost:3000` until the app responds, then prints the URLs.
+
+Re-running it safely rebuilds and restarts. Equivalent manual command:
+
+```bash
+docker compose up --build      # add -d to run in the background
+```
+
+### Managing the deployment
+
+```bash
+docker compose logs -f web realtime   # tail application logs
+docker compose ps                      # service status
+docker compose down                    # stop (add -v to also delete the database)
+```
+
+### Deploying to a remote host / public URL
+
+The default config serves on `localhost`. To run on a server reachable by others,
+point the browser at the realtime server's public address by overriding
+`NEXT_PUBLIC_COLLAB_URL` (it is baked in at build time):
+
+```bash
+NEXT_PUBLIC_COLLAB_URL=wss://realtime.example.com docker compose up --build -d
+```
+
+For a managed split (Next.js on Vercel + realtime on a WebSocket host + hosted
+Postgres), see [docs/DEPLOY.md](docs/DEPLOY.md).
+
+## Run on the host (for development)
 
 ```bash
 corepack pnpm install
