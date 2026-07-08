@@ -21,6 +21,12 @@
 
 # production
 /build
+/dist
+
+# windows installer build outputs
+/installer/.cache
+/installer/stage
+/installer/dist
 
 # misc
 .DS_Store

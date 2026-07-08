@@ -12,6 +12,13 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Windows installer build outputs and runtime scripts (plain CJS, not app code).
+    "dist/**",
+    "installer/.cache/**",
+    "installer/stage/**",
+    "installer/dist/**",
+    "installer/launcher.js",
+    "installer/stop.js",
   ]),
 ]);
 

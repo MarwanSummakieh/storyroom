@@ -42,7 +42,34 @@ This project demonstrates realtime state synchronization, editor architecture, W
 | Persistence | JSON dev store, Prisma/Postgres schema |
 | Testing | Vitest, Playwright |
 
-## Deploy in one command
+## Run natively on Windows (exe installer)
+
+No Docker, no Node.js, no database required. Build the installer once:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File installer\build-installer.ps1
+```
+
+The script downloads a portable Node.js runtime and Inno Setup automatically if
+they are missing, builds the app, and produces
+**`installer\dist\StoryroomSetup.exe`**.
+
+Run the installer (per-user, no admin prompt). It installs to
+`%LOCALAPPDATA%\Programs\Storyroom` and creates two Start Menu shortcuts:
+
+- **Storyroom** — starts the web + realtime servers in the background (no
+  console window) and opens <http://localhost:3000> in your browser. If it's
+  already running, it just opens a new tab.
+- **Stop Storyroom** — shuts the background servers down.
+
+Your writing is stored in `%LOCALAPPDATA%\Storyroom\data\storyroom.json` (the
+zero-setup JSON store) and survives reinstalls and uninstalls. Server logs land
+in `%LOCALAPPDATA%\Storyroom\logs`.
+
+The native build always uses the JSON store — Postgres/Prisma is only part of
+the Docker and hosted deployments below.
+
+## Deploy with Docker (one command)
 
 The only prerequisite is **[Docker](https://docs.docker.com/get-docker/)** (Docker
 Desktop on macOS/Windows, or Docker Engine on Linux). After cloning the repo:
